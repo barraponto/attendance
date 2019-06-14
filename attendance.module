@@ -22,3 +22,37 @@ function attendance_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function attendance_theme() {
+  $theme = [];
+  $theme['attendance'] = [
+    'render element' => 'elements',
+    'file' => 'attendance.page.inc',
+    'template' => 'attendance',
+  ];
+  $theme['attendance_content_add_list'] = [
+    'render element' => 'content',
+    'variables' => ['content' => NULL],
+    'file' => 'attendance.page.inc',
+  ];
+  return $theme;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function attendance_theme_suggestions_attendance(array $variables) {
+  $suggestions = [];
+  $entity = $variables['elements']['#attendance'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'attendance__' . $sanitized_view_mode;
+  $suggestions[] = 'attendance__' . $entity->bundle();
+  $suggestions[] = 'attendance__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'attendance__' . $entity->id();
+  $suggestions[] = 'attendance__' . $entity->id() . '__' . $sanitized_view_mode;
+  return $suggestions;
+}

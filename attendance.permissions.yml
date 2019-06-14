@@ -1,0 +1,19 @@
+add attendance entities:
+  title: 'Create new Attendance entities'
+
+administer attendance entities:
+  title: 'Administer Attendance entities'
+  description: 'Allow to access the administration form to configure Attendance entities.'
+  restrict access: true
+
+delete attendance entities:
+  title: 'Delete Attendance entities'
+
+edit attendance entities:
+  title: 'Edit Attendance entities'
+
+view published attendance entities:
+  title: 'View published Attendance entities'
+
+view unpublished attendance entities:
+  title: 'View unpublished Attendance entities'
