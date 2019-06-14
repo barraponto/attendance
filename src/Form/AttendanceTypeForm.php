@@ -29,6 +29,7 @@ class AttendanceTypeForm extends EntityForm {
 
   /**
    * Constructs an AttendanceTypeForm object.
+   *
    * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
    *   The Node Type entity storage.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager
@@ -82,11 +83,11 @@ class AttendanceTypeForm extends EntityForm {
       $node_type_options[$type->id()] = $type->label();
     }
 
-    $form['node_type'] = [
+    $form['target_bundle'] = [
       '#title' => $this->t('Node type this attendance bundle supports.'),
       '#type' => 'select',
       '#options' => $node_type_options,
-      '#default_value' => $attendance_type->node_type,
+      '#default_value' => $attendance_type->getTargetBundle() ?: '',
     ];
 
     $field_options = [];
@@ -103,11 +104,11 @@ class AttendanceTypeForm extends EntityForm {
       $this->messenger()->addWarning($this->t('No instance of a geofield was found. Geofencing will be disabled.'));
     }
 
-    $form['field'] = [
+    $form['target_field'] = [
       '#title' => $this->t('Field used to geofence the attendance block.'),
       '#type' => 'select',
       '#options' => $field_options,
-      '#default_value' => $attendance_type->field,
+      '#default_value' => $attendance_type->getTargetField() ?: '',
     ];
 
     $form['distance'] = [
@@ -115,7 +116,7 @@ class AttendanceTypeForm extends EntityForm {
       '#type' => 'number',
       '#field_suffix' => $this->t('miles'),
       '#description' => $this->t('A value of zero will disable geofencing.'),
-      '#default_value' => $attendance_type->distance,
+      '#default_value' => $attendance_type->getDistance() ?: '',
     ];
 
     return $form;
