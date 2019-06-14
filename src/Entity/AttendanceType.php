@@ -83,16 +83,34 @@ class AttendanceType extends ConfigEntityBundleBase implements AttendanceTypeInt
    */
   protected $distance;
 
+  /**
+   * Gets the target bundle for attendance.
+   *
+   * @return string|null
+   *   The target bundle (node type) id or NULL.
+   */
   public function getTargetBundle() {
-    return $this->target_bundle;
+    return $this->get('target_bundle');
   }
 
+  /**
+   * Gets the target field for geofencing.
+   *
+   * @return string|null
+   *   The target field id from the selected node type id or NULL.
+   */
   public function getTargetField() {
-    return $this->target_field;
+    return $this->get('target_field');
   }
 
+  /**
+   * Gets the maximum distance from target field, for geofencing.
+   *
+   * @return int|null
+   *   The maximum distance or NULL.
+   */
   public function getDistance() {
-    return $this->distance;
+    return $this->get('distance');
   }
 
 }
