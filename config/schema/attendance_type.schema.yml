@@ -10,3 +10,9 @@ attendance.attendance_type.*:
       label: 'Label'
     uuid:
       type: string
+    node_type:
+      type: string
+    field:
+      type: string
+    distance:
+      type: integer
