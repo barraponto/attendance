@@ -1,0 +1,13 @@
+{
+    "name": "attendance",
+    "type": "drupal-module",
+    "description": "Attendance allows users to register for event (date-enabled) nodes.",
+    "keywords": [
+    ],
+    "homepage": "https://www.drupal.org/project/attendance",
+    "minimum-stability": "dev",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/attendance",
+        "source": "http://cgit.drupalcode.org/attendance"
+    }
+}
