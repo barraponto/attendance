@@ -30,6 +30,13 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "label" = "label",
  *     "uuid" = "uuid"
  *   },
+ *   config_export = {
+ *      "id",
+ *      "label",
+ *      "target_bundle",
+ *      "target_field",
+ *      "distance",
+ *   },
  *   links = {
  *     "canonical" = "/admin/structure/attendance_type/{attendance_type}",
  *     "add-form" = "/admin/structure/attendance_type/add",
@@ -54,5 +61,38 @@ class AttendanceType extends ConfigEntityBundleBase implements AttendanceTypeInt
    * @var string
    */
   protected $label;
+
+  /**
+   * The Attendance type target bundle.
+   *
+   * @var string
+   */
+  protected $target_bundle;
+
+  /**
+   * The Attendance type target field for geofencing.
+   *
+   * @var string
+   */
+  protected $target_field;
+
+  /**
+   * The Attendance type geofencing distance limit.
+   *
+   * @var string
+   */
+  protected $distance;
+
+  public function getTargetBundle() {
+    return $this->target_bundle;
+  }
+
+  public function getTargetField() {
+    return $this->target_field;
+  }
+
+  public function getDistance() {
+    return $this->distance;
+  }
 
 }
