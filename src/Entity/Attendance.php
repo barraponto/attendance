@@ -104,6 +104,28 @@ class Attendance extends ContentEntityBase implements AttendanceInterface {
     // Add the owner field.
     $fields += static::ownerBaseFieldDefinitions($entity_type);
 
+    $fields['attends'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(new TranslatableMarkup('Node ID'))
+      ->setSetting('target_type', 'node')
+      ->setTranslatable($entity_type->isTranslatable())
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'entity_reference_entity_id',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 5,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields[$entity_type->getKey('owner')]
       ->setDescription(t('The attendee user ID .'))
       ->setSetting('handler', 'default')
