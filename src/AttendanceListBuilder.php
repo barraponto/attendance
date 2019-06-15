@@ -18,7 +18,7 @@ class AttendanceListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     $header['id'] = $this->t('Attendance ID');
-    $header['name'] = $this->t('Name');
+    $header['email'] = $this->t('Email');
     return $header + parent::buildHeader();
   }
 
@@ -29,7 +29,7 @@ class AttendanceListBuilder extends EntityListBuilder {
     /* @var \Drupal\attendance\Entity\Attendance $entity */
     $row['id'] = $entity->id();
     $row['name'] = Link::createFromRoute(
-      $entity->label(),
+      $entity->get('email')->value,
       'entity.attendance.edit_form',
       ['attendance' => $entity->id()]
     );
