@@ -8,7 +8,8 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\user\UserInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\user\EntityOwnerTrait;
 
 /**
  * Defines the Attendance entity.
@@ -43,9 +44,8 @@ use Drupal\user\UserInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "bundle" = "type",
- *     "label" = "name",
  *     "uuid" = "uuid",
- *     "uid" = "user_id",
+ *     "owner" = "user_id",
  *     "langcode" = "langcode",
  *     "published" = "status",
  *   },
@@ -65,6 +65,7 @@ class Attendance extends ContentEntityBase implements AttendanceInterface {
 
   use EntityChangedTrait;
   use EntityPublishedTrait;
+  use EntityOwnerTrait;
 
   /**
    * {@inheritdoc}
@@ -74,21 +75,6 @@ class Attendance extends ContentEntityBase implements AttendanceInterface {
     $values += [
       'user_id' => \Drupal::currentUser()->id(),
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getName() {
-    return $this->get('name')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setName($name) {
-    $this->set('name', $name);
-    return $this;
   }
 
   /**
@@ -109,49 +95,18 @@ class Attendance extends ContentEntityBase implements AttendanceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOwner() {
-    return $this->get('user_id')->entity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOwnerId() {
-    return $this->get('user_id')->target_id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOwnerId($uid) {
-    $this->set('user_id', $uid);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOwner(UserInterface $account) {
-    $this->set('user_id', $account->id());
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     // Add the published field.
     $fields += static::publishedBaseFieldDefinitions($entity_type);
 
-    $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Authored by'))
-      ->setDescription(t('The user ID of author of the Attendance entity.'))
-      ->setRevisionable(TRUE)
-      ->setSetting('target_type', 'user')
+    // Add the owner field.
+    $fields += static::ownerBaseFieldDefinitions($entity_type);
+
+    $fields[$entity_type->getKey('owner')]
+      ->setDescription(t('The attendee user ID .'))
       ->setSetting('handler', 'default')
-      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'author',
@@ -170,13 +125,9 @@ class Attendance extends ContentEntityBase implements AttendanceInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Attendance entity.'))
-      ->setSettings([
-        'max_length' => 50,
-        'text_processing' => 0,
-      ])
+    $fields['email'] = BaseFieldDefinition::create('email')
+      ->setLabel(t('Email'))
+      ->setDescription(t('Attendee email'))
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
         'label' => 'above',
@@ -184,14 +135,15 @@ class Attendance extends ContentEntityBase implements AttendanceInterface {
         'weight' => -4,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'email_default',
         'weight' => -4,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
 
-    $fields['status']->setDescription(t('A boolean indicating whether the Attendance is published.'))
+    $fields['status']->setDescription(t('A boolean indicating whether the Attendance info is public.'))
+      ->setLabel(new TranslatableMarkup('Public'))
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
         'weight' => -3,

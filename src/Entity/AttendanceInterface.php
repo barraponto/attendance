@@ -19,25 +19,6 @@ interface AttendanceInterface extends ContentEntityInterface, EntityChangedInter
    */
 
   /**
-   * Gets the Attendance name.
-   *
-   * @return string
-   *   Name of the Attendance.
-   */
-  public function getName();
-
-  /**
-   * Sets the Attendance name.
-   *
-   * @param string $name
-   *   The Attendance name.
-   *
-   * @return \Drupal\attendance\Entity\AttendanceInterface
-   *   The called Attendance entity.
-   */
-  public function setName($name);
-
-  /**
    * Gets the Attendance creation timestamp.
    *
    * @return int
@@ -55,6 +36,5 @@ interface AttendanceInterface extends ContentEntityInterface, EntityChangedInter
    *   The called Attendance entity.
    */
   public function setCreatedTime($timestamp);
-
 
 }
