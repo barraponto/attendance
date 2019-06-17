@@ -15,3 +15,9 @@ entity.attendance.delete_form:
   base_route:  entity.attendance.canonical
   title: Delete
   weight: 10
+
+attendance.admin:
+  title: Attendance
+  route_name: entity.attendance.collection
+  base_route: system.admin_content
+
