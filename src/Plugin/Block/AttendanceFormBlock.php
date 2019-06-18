@@ -67,13 +67,27 @@ class AttendanceFormBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function build() {
-    $attendance = $this->entityTypeManager
-      ->getStorage('attendance')
-      ->create(['type' => $this->getDerivativeId()]);
-
-    $context = $this->getContextValues();
+    $storage = $this->entityTypeManager->getStorage('attendance');
+    $attendance_type = $this->getDerivativeId();
     $nid = $this->getContextValue('node')->id();
-    $attendance->set('attends', $nid);
+    $user = \Drupal::currentUser();
+
+    if ($user->id()) {
+      $existing = $storage->loadByProperties([
+        "type" => $attendance_type,
+        "attends" => $nid,
+        "user_id" => $user->id(),
+      ]);
+      $attendance = $existing ? reset($existing) : $storage->create([
+        "type" => $attendance_type,
+        "attends" => $nid,
+        "user_id" => $user->id(),
+      ]);
+    }
+    else {
+      // @TODO: support sessions
+      $attendance = $storage->create(["type" => $attendance_type, "attends" => $nid]);
+    }
 
     $form = $this->entityTypeManager
       ->getFormObject('attendance', 'default')
