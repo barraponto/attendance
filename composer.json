@@ -1,7 +1,7 @@
 {
     "name": "attendance",
     "type": "drupal-module",
-    "description": "Attendance allows users to register for event (date-enabled) nodes.",
+    "description": "Attendance allows users to register for (event) nodes.",
     "keywords": [
     ],
     "homepage": "https://www.drupal.org/project/attendance",

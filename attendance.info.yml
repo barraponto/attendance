@@ -1,5 +1,7 @@
 name: 'Attendance'
 type: module
-description: 'Attendance allows users to register for event (date-enabled) nodes.'
+description: 'Attendance allows users to register for (event) nodes.'
 core: 8.x
 package: 'Attendance'
+dependencies:
+  - drupal:views

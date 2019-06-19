@@ -16,7 +16,7 @@ function attendance_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.attendance':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Attendance allows users to register for event (date-enabled) nodes.') . '</p>';
+      $output .= '<p>' . t('Attendance allows users to register for (event) nodes.') . '</p>';
       return $output;
 
     default:
