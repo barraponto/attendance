@@ -1,18 +1,13 @@
 # Attendance routing definition
 
-entity.attendance.canonical:
-  route_name: entity.attendance.canonical
-  base_route: entity.attendance.canonical
-  title: 'View'
-
 entity.attendance.edit_form:
   route_name: entity.attendance.edit_form
-  base_route: entity.attendance.canonical
+  base_route: entity.attendance.edit_form
   title: 'Edit'
 
 entity.attendance.delete_form:
-  route_name:  entity.attendance.delete_form
-  base_route:  entity.attendance.canonical
+  route_name: entity.attendance.delete_form
+  base_route: entity.attendance.edit_form
   title: Delete
   weight: 10
 
