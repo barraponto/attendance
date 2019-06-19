@@ -20,7 +20,7 @@ display:
     position: 0
     display_options:
       access:
-        type: none
+        type: attendance_node_owner
         options: {  }
       cache:
         type: tag
