@@ -7,8 +7,8 @@ dependencies:
 id: attendance_report
 label: 'Attendance Report'
 module: views
-description: ''
-tag: ''
+description: 'Administrative Attendance Report tab for Event Nodes'
+tag: attendance
 base_table: attendance_field_data
 base_field: id
 core: 8.x
@@ -352,18 +352,7 @@ display:
           entity_type: attendance
           entity_field: user_id
           plugin_id: field
-      filters:
-        status:
-          value: '1'
-          table: attendance_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: attendance
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-          group: 1
+      filters: {  }
       sorts: {  }
       header: {  }
       footer: {  }
@@ -407,11 +396,13 @@ display:
           entity_field: attends
           plugin_id: numeric
       display_extenders: {  }
+      title: 'Attendance Report'
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - route
         - url
         - url.query_args
       tags: {  }
@@ -437,6 +428,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - route
         - url
         - url.query_args
       tags: {  }
