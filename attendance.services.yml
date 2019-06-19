@@ -2,3 +2,7 @@ services:
   plugin.manager.viewsaccess:
     class: Drupal\attendance\Plugin\views\access\AttendanceNodeOwnerPermission
     parent: default_plugin_manager
+  access_check.attended_node_owner:
+    class: Drupal\attendance\Access\AttendedNodeOwnerCheck
+    tags:
+      - { name: access_check }

@@ -2,8 +2,10 @@
 
 namespace Drupal\attendance\Plugin\views\access;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,7 +27,7 @@ class AttendanceNodeOwnerAccess extends AccessPluginBase implements CacheableDep
   /**
    * The node entity from the route.
    *
-   * @var \Drupal\group\Entity\GroupInterface
+   * @var \Drupal\node\Entity\NodeInterface
    */
   protected $node;
 
@@ -37,11 +39,17 @@ class AttendanceNodeOwnerAccess extends AccessPluginBase implements CacheableDep
   protected $context;
 
   /**
+   * The access check.
+   *
+   * @var \Drupal\Core\Routing\Access\AccessInterface
+   */
+  protected $check;
+
+  /**
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    $user_id = $this->account->id();
-    return ($user_id == 1) || ($this->node->getOwnerId() == $user_id);
+    return $this->check->access($account, $this->node)->isAllowed();
   }
 
   /**
@@ -55,7 +63,7 @@ class AttendanceNodeOwnerAccess extends AccessPluginBase implements CacheableDep
    * {@inheritdoc}
    */
   public function alterRouteDefinition(Route $route) {
-    $route->setRequirement('_access', 'TRUE');
+    $route->setRequirement('_custom_access', '\Drupal\attendance\Access\AttendedNodeOwnerCheck::access');
     $route->setOption('parameters', ['node' => ['type' => 'entity:node']]);
   }
 
@@ -68,18 +76,18 @@ class AttendanceNodeOwnerAccess extends AccessPluginBase implements CacheableDep
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user from current session.
    * @param \Drupal\Core\Plugin\Context\ContextProviderInterface $context_provider
    *   The node route context.
+   * @param \Drupal\Core\Routing\Access\AccessInterface $access
+   *   The attended node owner access check.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AccountInterface $account, ContextProviderInterface $context_provider) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ContextProviderInterface $context_provider, AccessInterface $access) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $contexts = $context_provider->getRuntimeContexts(['node']);
-    $this->account = $account;
     $this->context = $contexts['node'];
     $this->node = $this->context->getContextValue();
+    $this->check = $access;
   }
 
   /**
@@ -90,8 +98,8 @@ class AttendanceNodeOwnerAccess extends AccessPluginBase implements CacheableDep
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('current_user'),
-      $container->get('node.node_route_context')
+      $container->get('node.node_route_context'),
+      $container->get('access_check.attended_node_owner')
     );
   }
 
