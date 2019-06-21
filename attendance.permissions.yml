@@ -1,6 +1,3 @@
-add attendance entities:
-  title: 'Create new Attendance entities'
-
 administer attendance entities:
   title: 'Administer Attendance entities'
   description: 'Allow to access the administration form to configure Attendance entities.'
@@ -9,11 +6,26 @@ administer attendance entities:
 delete attendance entities:
   title: 'Delete Attendance entities'
 
+delete attendance entities for own nodes:
+  title: 'Delete Attendance entities for own nodes'
+
 edit attendance entities:
   title: 'Edit Attendance entities'
+
+edit attendance entities for own nodes:
+  title: 'Edit Attendance entities for own nodes'
 
 view published attendance entities:
   title: 'View published Attendance entities'
 
+view published attendance entities for own nodes:
+  title: 'View published Attendance entities for own nodes'
+
 view unpublished attendance entities:
   title: 'View unpublished Attendance entities'
+
+view unpublished attendance entities for own nodes:
+  title: 'View unpublished Attendance entities for own nodes'
+
+permission_callbacks:
+  - \Drupal\attendance\AttendancePermissions::attendanceTypePermissions

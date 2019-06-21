@@ -5,6 +5,7 @@ namespace Drupal\attendance\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -98,6 +99,15 @@ class AttendanceFormBlock extends BlockBase implements ContainerFactoryPluginInt
     $build['attends']['#access'] = FALSE;
 
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockAccess(AccountInterface $account) {
+    $access_handler = $this->entityTypeManager->getAccessControlHandler('attendance');
+    $attendance_type = $this->getDerivativeId();
+    return $access_handler->createAccess($attendance_type, $account, [], TRUE);
   }
 
 }

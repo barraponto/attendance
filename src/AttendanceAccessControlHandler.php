@@ -2,10 +2,10 @@
 
 namespace Drupal\attendance;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Access\AccessResult;
 
 /**
  * Access controller for the Attendance entity.
@@ -15,6 +15,28 @@ use Drupal\Core\Access\AccessResult;
 class AttendanceAccessControlHandler extends EntityAccessControlHandler {
 
   /**
+   * Helper to check permissions generally or for owned attended nodes.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user for which to check access.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity for which to check access.
+   * @param string $permission
+   *   The permission for entity operations.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   */
+  private function allowIfAnyOrOwnPermission(AccountInterface $account, EntityInterface $entity, $permission) {
+    $node = $entity->get('attends')->entity;
+    return AccessResult::allowedIfHasPermission($account, $permission)
+      ->orIf(
+        AccessResult::allowedIfHasPermission($account, $permission . ' for own node')
+          ->andIf(AccessResult::allowedIf($node->getOwnerId() == $account->id()))
+      );
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
@@ -22,15 +44,15 @@ class AttendanceAccessControlHandler extends EntityAccessControlHandler {
     switch ($operation) {
       case 'view':
         if (!$entity->isPublished()) {
-          return AccessResult::allowedIfHasPermission($account, 'view unpublished attendance entities');
+          return $this->allowIfAnyOrOwnPermission($account, $entity, 'view unpublished attendance entities');
         }
-        return AccessResult::allowedIfHasPermission($account, 'view published attendance entities');
+        return $this->allowIfAnyOrOwnPermission($account, $entity, 'view published attendance entities');
 
       case 'update':
-        return AccessResult::allowedIfHasPermission($account, 'edit attendance entities');
+        return $this->allowIfAnyOrOwnPermission($account, $entity, 'edit attendance entities');
 
       case 'delete':
-        return AccessResult::allowedIfHasPermission($account, 'delete attendance entities');
+        return $this->allowIfAnyOrOwnPermission($account, $entity, 'delete attendance entities');
     }
 
     // Unknown operation, no opinion.
@@ -41,7 +63,7 @@ class AttendanceAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIfHasPermission($account, 'add attendance entities');
+    return AccessResult::allowedIfHasPermission($account, "add $entity_bundle attendance entries");
   }
 
 }
