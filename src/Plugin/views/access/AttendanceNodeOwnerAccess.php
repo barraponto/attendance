@@ -49,7 +49,10 @@ class AttendanceNodeOwnerAccess extends AccessPluginBase implements CacheableDep
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    return $this->check->access($account, $this->node)->isAllowed();
+    if (!empty($this->node)) {
+      return $this->check->access($account, $this->node)->isAllowed();
+    }
+    return FALSE;
   }
 
   /**
@@ -63,7 +66,7 @@ class AttendanceNodeOwnerAccess extends AccessPluginBase implements CacheableDep
    * {@inheritdoc}
    */
   public function alterRouteDefinition(Route $route) {
-    $route->setRequirement('_custom_access', '\Drupal\attendance\Access\AttendedNodeOwnerCheck::access');
+    $route->setRequirement('_owns_attended_node', 'TRUE');
     $route->setOption('parameters', ['node' => ['type' => 'entity:node']]);
   }
 

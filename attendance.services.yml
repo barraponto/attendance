@@ -2,4 +2,4 @@ services:
   access_check.attended_node_owner:
     class: Drupal\attendance\Access\AttendedNodeOwnerCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: '_owns_attended_node' }
