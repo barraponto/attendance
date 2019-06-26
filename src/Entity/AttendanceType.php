@@ -34,9 +34,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *   config_export = {
  *      "id",
  *      "label",
- *      "target_bundle",
- *      "target_field",
- *      "distance",
+ *      "target_bundles",
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/attendance_type/{attendance_type}",
@@ -64,54 +62,17 @@ class AttendanceType extends ConfigEntityBundleBase implements AttendanceTypeInt
   protected $label;
 
   /**
-   * The Attendance type target bundle.
+   * The Attendance type target bundles.
    *
-   * @var string
+   * @var array
    */
-  protected $target_bundle;
+  protected $target_bundles;
 
-  /**
-   * The Attendance type target field for geofencing.
-   *
-   * @var string
+  /*
+   * {@inheritdoc}
    */
-  protected $target_field;
-
-  /**
-   * The Attendance type geofencing distance limit.
-   *
-   * @var string
-   */
-  protected $distance;
-
-  /**
-   * Gets the target bundle for attendance.
-   *
-   * @return string|null
-   *   The target bundle (node type) id or NULL.
-   */
-  public function getTargetBundle() {
-    return $this->get('target_bundle');
-  }
-
-  /**
-   * Gets the target field for geofencing.
-   *
-   * @return string|null
-   *   The target field id from the selected node type id or NULL.
-   */
-  public function getTargetField() {
-    return $this->get('target_field');
-  }
-
-  /**
-   * Gets the maximum distance from target field, for geofencing.
-   *
-   * @return int|null
-   *   The maximum distance or NULL.
-   */
-  public function getDistance() {
-    return $this->get('distance');
+  public function getTargetBundles() {
+    return $this->get('target_bundles');
   }
 
 }

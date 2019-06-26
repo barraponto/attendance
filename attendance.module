@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Implements hook_help().
@@ -17,6 +18,12 @@ function attendance_help($route_name, RouteMatchInterface $route_match) {
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Attendance allows users to register for (event) nodes.') . '</p>';
+      $output .= '<p>' . t('Create attendance types (like "guests" or "vip") and choose node types to attend to (usually event nodes).<br/>
+        Place the corresponding form block in the block layout. Make sure it shows up in node pages.<br/>
+        The form block should be visible to users with the permission to add attendance entries for that attendance type.<br/>
+        There are also public attendance listing blocks available.
+        ') . '</p>';
+      $output .= '<p>' . t('The node owner should be able to see the attendance report as a tab under their node page.') . '</p>';
       return $output;
 
     default:

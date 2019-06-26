@@ -9,5 +9,12 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  */
 interface AttendanceTypeInterface extends ConfigEntityInterface {
 
-  // Add get/set methods for your configuration properties here.
+  /**
+   * Gets the target bundles for attendance.
+   *
+   * @return array
+   *   The target bundles (node types) ids.
+   */
+  public function getTargetBundles();
+
 }
