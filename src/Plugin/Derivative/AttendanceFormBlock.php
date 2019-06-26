@@ -5,6 +5,7 @@ namespace Drupal\attendance\Plugin\Derivative;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -46,7 +47,7 @@ class AttendanceFormBlock extends DeriverBase implements ContainerDeriverInterfa
   public function getDerivativeDefinitions($base_plugin_definition) {
     foreach ($this->storage->loadMultiple() as $bundle => $attendance_type) {
       $this->derivatives[$bundle] = $base_plugin_definition;
-      $this->derivatives[$bundle]['admin_label'] = $attendance_type->label();
+      $this->derivatives[$bundle]['admin_label'] = new TranslatableMarkup('@attendance_type form block', ['@attendance_type' => $attendance_type->label()]);
       $this->derivatives[$bundle]['config_dependencies']['config'] = [$attendance_type->getConfigDependencyName()];
     }
     return $this->derivatives;
