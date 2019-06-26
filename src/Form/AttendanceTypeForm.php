@@ -2,9 +2,10 @@
 
 namespace Drupal\attendance\Form;
 
-use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,19 +26,19 @@ class AttendanceTypeForm extends EntityForm {
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  protected $fieldManager;
+  protected $entityFieldManager;
 
   /**
    * Constructs an AttendanceTypeForm object.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
    *   The Node Type entity storage.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager
-   *   The Node Type entity storage.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The Entity field manager.
    */
-  public function __construct(EntityStorageInterface $entity_storage, EntityFieldManagerInterface $field_manager) {
+  public function __construct(EntityStorageInterface $entity_storage, EntityFieldManagerInterface $entity_field_manager) {
     $this->entityStorage = $entity_storage;
-    $this->fieldManager = $field_manager;
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -75,48 +76,17 @@ class AttendanceTypeForm extends EntityForm {
       '#disabled' => !$attendance_type->isNew(),
     ];
 
-    /* You will need additional form elements for your custom properties. */
-
     $node_type_options = [];
     $node_types = $this->entityStorage->loadMultiple();
     foreach ($node_types as $type) {
       $node_type_options[$type->id()] = $type->label();
     }
 
-    $form['target_bundle'] = [
-      '#title' => $this->t('Node type this attendance bundle supports.'),
-      '#type' => 'select',
+    $form['target_bundles'] = [
+      '#title' => $this->t('Node types this attendance bundle supports.'),
+      '#type' => 'checkboxes',
       '#options' => $node_type_options,
-      '#default_value' => $attendance_type->getTargetBundle() ?: '',
-    ];
-
-    $field_options = [];
-    $fields = $this->fieldManager->getFieldMapByFieldType('geofield');
-    if (isset($fields['node'])) {
-      foreach ($fields['node'] as $field_name => $field_info) {
-        $field_options[$field_name] = $this->t('@field (used in %bundles)', [
-          '@field' => $field_name,
-          '%bundles' => implode(', ', $field_info['bundles']),
-        ]);
-      }
-    }
-    else {
-      $this->messenger()->addWarning($this->t('No instance of a geofield was found. Geofencing will be disabled.'));
-    }
-
-    $form['target_field'] = [
-      '#title' => $this->t('Field used to geofence the attendance block.'),
-      '#type' => 'select',
-      '#options' => $field_options,
-      '#default_value' => $attendance_type->getTargetField() ?: '',
-    ];
-
-    $form['distance'] = [
-      '#title' => $this->t('Distance threshold to allow registrations.'),
-      '#type' => 'number',
-      '#field_suffix' => $this->t('miles'),
-      '#description' => $this->t('A value of zero will disable geofencing.'),
-      '#default_value' => $attendance_type->getDistance() ?: '',
+      '#default_value' => $attendance_type->getTargetBundles() ?: [],
     ];
 
     return $form;
@@ -127,6 +97,17 @@ class AttendanceTypeForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $attendance_type = $this->entity;
+
+    $definitions = $this->entityFieldManager->getFieldDefinitions('attendance', $attendance_type->id());
+    if ($definitions['attends'] instanceof BaseFieldOverride) {
+      $override = $definitions['attends'];
+    }
+    else {
+      $override = BaseFieldOverride::createFromBaseFieldDefinition($definitions['attends'], $attendance_type->id());
+    }
+    $override->setSetting('handler_settings', ['target_bundles' => $attendance_type->getTargetBundles()]);
+    $override->save();
+
     $status = $attendance_type->save();
 
     switch ($status) {

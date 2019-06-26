@@ -10,12 +10,8 @@ attendance.attendance_type.*:
       label: 'Label'
     uuid:
       type: string
-    target_bundle:
-      type: string
+    target_bundles:
+      type: sequence
       label: 'Target node type'
-    target_field:
-      type: string
-      label: 'Target field for geofencing'
-    distance:
-      label: 'Distance limit for geofencing'
-      type: integer
+      sequence:
+        type: string
