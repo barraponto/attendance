@@ -19,6 +19,7 @@ use Drupal\user\EntityOwnerTrait;
  * @ContentEntityType(
  *   id = "attendance",
  *   label = @Translation("Attendance"),
+ *   label_collection = @Translation("Attendance entries"),
  *   bundle_label = @Translation("Attendance type"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",

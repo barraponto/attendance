@@ -10,6 +10,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  * @ConfigEntityType(
  *   id = "attendance_type",
  *   label = @Translation("Attendance type"),
+ *   label_collection = @Translation("Attendance types"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\attendance\AttendanceTypeListBuilder",
