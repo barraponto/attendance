@@ -1,0 +1,10 @@
+entity.attendance.add_form:
+  route_name: entity.attendance.add_page
+  title: 'Add Attendance'
+  appears_on:
+    - entity.attendance.collection
+entity.attendance_type.add_form:
+  route_name: entity.attendance_type.add_form
+  title: 'Add Attendance type'
+  appears_on:
+    - entity.attendance_type.collection

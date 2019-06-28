@@ -1,0 +1,17 @@
+attendance.attendance_type.*:
+  type: config_entity
+  label: 'Attendance type config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
+    target_bundles:
+      type: sequence
+      label: 'Target node type'
+      sequence:
+        type: string

@@ -1,0 +1,17 @@
+
+# Attendance menu items definition
+entity.attendance.collection:
+  title: 'Attendance list'
+  route_name: entity.attendance.collection
+  description: 'List Attendance entities'
+  parent: system.admin_content
+  weight: 100
+
+
+# Attendance type menu items definition
+entity.attendance_type.collection:
+  title: 'Attendance types'
+  route_name: entity.attendance_type.collection
+  description: 'List Attendance type (bundles)'
+  parent: system.admin_structure
+  weight: 99
